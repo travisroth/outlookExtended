@@ -188,7 +188,25 @@ class ElemWithReadStatus:
 
 
 class UIAGridRowWithReadStatus(UIAGridRow, ElemWithReadStatus):
-	pass
+	@staticmethod
+	def _stripColumnLabels(name):
+		parts = name.split(", ")
+		strippedCount = 0
+		newParts = []
+		for part in parts:
+			if ": " in part:
+				label, value = part.split(": ", 1)
+				if label and value and len(label.split()) <= 4:
+					newParts.append(value)
+					strippedCount += 1
+					continue
+			newParts.append(part)
+		if strippedCount >= 2:
+			return ", ".join(newParts)
+		return name
+
+	def _get_name(self):
+		return self._stripColumnLabels(super().name)
 
 
 class UIAWithReadStatus(UIA, ElemWithReadStatus):

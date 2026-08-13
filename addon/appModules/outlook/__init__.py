@@ -206,7 +206,7 @@ class UIAGridRowWithReadStatus(UIAGridRow, ElemWithReadStatus):
 		return name
 
 	def _get_name(self):
-		return self._stripColumnLabels(super().name)
+		return self._stripColumnLabels(super()._get_name())
 
 
 class UIAWithReadStatus(UIA, ElemWithReadStatus):

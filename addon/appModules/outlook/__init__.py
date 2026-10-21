@@ -30,6 +30,7 @@ from nvdaBuiltin.appModules.outlook import UIAGridRow, AddressBookEntry, AppModu
 from .itemWindow import OutlookItemWindow, NotInMessageWindowError, HeaderFieldNotFoundeError
 from .compa import CTWRAPPER as controlTypes
 from .speechOnDemand import getSpeechOnDemandParameter, executeWithSpeakOnDemand
+from .brailleLayout import MessageListLayout
 
 from scriptHandler import getLastScriptRepeatCount, script
 import winUser
@@ -604,6 +605,15 @@ class AppModule(BuiltinAppModule):
 		self.tcNumber = 0
 		self.notificationChecker = NotificationChecker(appModule=self)
 		self.notificationChecker.start()
+		self._brailleLayout = MessageListLayout(api.getFocusObject)
+
+	def brlMultilineLayout(self, focus, area):
+		"""Show the message list beside the reading pane on a BrlMultiline display.
+
+		Only the BrlMultiline add-on calls this, where the reader has let applications arrange the
+		braille display. See L{brailleLayout}.
+		"""
+		return self._brailleLayout.layout(focus, area)
 
 	def terminate(self, *args, **kwargs):
 		self.notificationChecker.stop()

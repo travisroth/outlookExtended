@@ -6,7 +6,10 @@
 
 
 class LogHandler:
-	def debug(*args):
+	def debug(*args, **kwargs):
+		pass
+
+	def debugWarning(*args, **kwargs):
 		pass
 
 

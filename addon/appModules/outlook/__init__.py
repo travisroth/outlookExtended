@@ -63,6 +63,20 @@ import threading
 from time import sleep
 from html import escape
 
+try:
+	from braille.constants import TEXT_SEPARATOR
+	from braille.regions.NVDAObject import NVDAObjectRegion, ReviewNVDAObjectRegion
+	from braille.regions.textInfo import TextInfoRegion, ReviewTextInfoRegion
+except ImportError:
+	# Older NVDA versions, before the braille module was split into a package
+	from braille import (
+		TEXT_SEPARATOR,
+		NVDAObjectRegion,
+		ReviewNVDAObjectRegion,
+		TextInfoRegion,
+		ReviewTextInfoRegion,
+	)
+
 import addonHandler
 
 # Save NVDA translation before overriding it
@@ -271,6 +285,33 @@ class AddressBookEntryWithCells(RowWithoutCellObjects, RowWithFakeNavigation, Ad
 
 		# Translators: When trying to move by column in address book (Alt+Ctrl+Up/DownArrow)
 		ui.message(_("Column navigation not supported in the address book"))
+
+
+class SingleLineTextInfoRegion(TextInfoRegion):
+	def _isMultiline(self):
+		return False
+
+
+class SingleLineReviewTextInfoRegion(ReviewTextInfoRegion):
+	def _isMultiline(self):
+		return False
+
+
+class HeaderEditField(NVDAObject):
+	"""An edit field in the header of an item window, such as To, Cc or Bcc.
+
+	Outlook reports the recipient fields as multiline, so NVDA places their text at the left edge of the braille
+	display and the field label is scrolled out of view. These fields only wrap when they hold many recipients, so
+	braille them as single line fields to keep the label shown. Speech and navigation are not changed.
+	"""
+
+	def getBrailleRegions(self, review=False):
+		if review:
+			yield ReviewNVDAObjectRegion(self, appendText=TEXT_SEPARATOR)
+			yield SingleLineReviewTextInfoRegion(self)
+		else:
+			yield NVDAObjectRegion(self, appendText=TEXT_SEPARATOR)
+			yield SingleLineTextInfoRegion(self)
 
 
 class FakeRootDialog(Window):
@@ -571,6 +612,10 @@ class AppModule(BuiltinAppModule):
 
 	def chooseNVDAObjectOverlayClasses(self, obj, clsList):
 		super().chooseNVDAObjectOverlayClasses(obj, clsList)
+		# Header fields use the RichEdit20WPT class; the plain text message body (RichEdit20W) is left as multiline.
+		if obj.role == controlTypes.Role.EDITABLETEXT and obj.windowClassName == "RichEdit20WPT":
+			clsList.insert(0, HeaderEditField)
+			return
 		if obj.role == controlTypes.Role.LISTITEM and obj.windowClassName == "OUTEXVLB":
 			clsList.insert(0, AddressBookEntryWithCells)
 			return

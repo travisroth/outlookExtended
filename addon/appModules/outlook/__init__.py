@@ -638,9 +638,17 @@ class AppModule(BuiltinAppModule):
 		if UIA in clsList:
 			if obj.role == controlTypes.Role.GROUPING and obj.parent.windowClassName == "OutlookGrid":
 				clsList.insert(0, UIAWithReadStatus)
-			elif obj.UIAElement.currentAutomationID == "RecipientButton":
+				return
+			try:
+				automationID = obj.UIAElement.currentAutomationID
+			except COMError:
+				# Outlook can be too busy to answer, such as while it loads a message, and UI Automation
+				# then times out. The object is made without these classes rather than with an error.
+				log.debugWarning("Could not read the UIA automation ID", exc_info=True)
+				return
+			if automationID == "RecipientButton":
 				clsList.insert(0, UIARecipientButton)
-			elif obj.UIAElement.currentAutomationID == "MoreInfo":
+			elif automationID == "MoreInfo":
 				clsList.insert(0, UIAMoreInfoButton)
 
 	def reportHeaderFieldN(self, nField, gesture):

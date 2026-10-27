@@ -2,10 +2,21 @@
 
 * Authors: Cyrille Bougot, Ralf Kefferpuetz
 * NVDA compatibility: 2019.3 and beyond
+* Fork by Travis Roth
 
 This add-on improves the use of Microsoft Outlook with NVDA.
 It provides commands to read, move to, or copy various parts of a message such as message headers, attachments, information bar, notification or message body.
 It also improves navigation within the application and provides more feedback when performing certain actions.
+
+## Fork Notes
+
+This excellent add-on has been forked to make a couple of personal changes. 
+
+1. Fixed braille to show the labels for the To, CC, and BCC fields on new messages. This is a side affect of how NVDA handles multi-line edit fields and how Outlook marks the role, not something outlookExtended introduced.
+2. Added a feature to move to the next (and previous) message in an email chain.
+
+If you do not need these features please use the excellent official outlookExtended add-on instead. It is available in the NVDA add-on store.
+This is posted to meet the sharing of code per GPL and the spirit of NVDA. It is not in the NVDA add-on store. 
 
 ## Commands
 

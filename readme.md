@@ -14,6 +14,7 @@ This excellent add-on has been forked to make a couple of personal changes.
 
 1. Fixed braille to show the labels for the To, CC, and BCC fields on new messages. This is a side affect of how NVDA handles multi-line edit fields and how Outlook marks the role, not something outlookExtended introduced.
 2. Added a feature to move to the next (and previous) message in an email chain.
+3. Add BrlMultiline add-on support to show the preview pane and the selected mesage in the message list together.
 
 If you do not need these features please use the excellent official outlookExtended add-on instead. It is available in the NVDA add-on store.
 This is posted to meet the sharing of code per GPL and the spirit of NVDA. It is not in the NVDA add-on store. 

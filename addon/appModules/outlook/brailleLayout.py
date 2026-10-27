@@ -130,6 +130,7 @@ class MessageListLayout:
 		"""
 		:param getFocus: returns the object with the focus now, asked each time the reading pane is.
 		"""
+		super().__init__()
 		self._getFocus = getFocus
 
 	def layout(self, focus, area):

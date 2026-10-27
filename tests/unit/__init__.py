@@ -22,6 +22,12 @@ sys.path.insert(1, SOURCE_DIR)
 
 from itemWindow import OutlookItemWindow  # noqa: E402 - Needed here after path modification.
 from test_brailleLayout import TestMessageListLayout  # noqa: E402, F401 - Run with the tests below.
+from test_messageChain import (  # noqa: E402, F401 - Run with the tests below.
+	TestAHeaderInOneParagraph,
+	TestFindingAHeader,
+	TestLabels,
+	TestMovingThroughAChain,
+)
 
 
 class TestOutlookItemWindow(unittest.TestCase):

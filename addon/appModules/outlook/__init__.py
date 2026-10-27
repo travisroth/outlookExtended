@@ -26,11 +26,13 @@ from nvdaBuiltin.appModules.outlook import *  # noqa: F401, F403
 
 # Import here explecitely used variables from original outlook appModule for clarity.
 from nvdaBuiltin.appModules.outlook import UIAGridRow, AddressBookEntry, AppModule as BuiltinAppModule
+from nvdaBuiltin.appModules.outlook import OutlookUIAWordDocument, OutlookWordDocument
 
 from .itemWindow import OutlookItemWindow, NotInMessageWindowError, HeaderFieldNotFoundeError
 from .compa import CTWRAPPER as controlTypes
 from .speechOnDemand import getSpeechOnDemandParameter, executeWithSpeakOnDemand
 from .brailleLayout import MessageListLayout
+from .messageChainNavigation import ReadingPaneDocument
 
 from scriptHandler import getLastScriptRepeatCount, script
 import winUser
@@ -622,6 +624,10 @@ class AppModule(BuiltinAppModule):
 
 	def chooseNVDAObjectOverlayClasses(self, obj, clsList):
 		super().chooseNVDAObjectOverlayClasses(obj, clsList)
+		# A message's Word document, whose browse mode gets message chain navigation.
+		if OutlookUIAWordDocument in clsList or OutlookWordDocument in clsList:
+			clsList.insert(0, ReadingPaneDocument)
+			return
 		# Header fields use the RichEdit20WPT class; the plain text message body (RichEdit20W) is left as multiline.
 		if obj.role == controlTypes.Role.EDITABLETEXT and obj.windowClassName == "RichEdit20WPT":
 			clsList.insert(0, HeaderEditField)
